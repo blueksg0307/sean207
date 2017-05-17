@@ -48,7 +48,6 @@ public class ReserveActivity extends AppCompatActivity {
 
         final Intent intent = getIntent();
         userID = intent.getStringExtra("userID");
-        Toast.makeText(this,userID,Toast.LENGTH_SHORT).show();
         userName = intent.getStringExtra("userName");
         userBirth = intent.getStringExtra("userPhone");
         reserved_time = intent.getStringExtra("reserved_time");

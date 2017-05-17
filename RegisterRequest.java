@@ -12,7 +12,7 @@ import java.util.Map;
 public class RegisterRequest extends StringRequest {
 
 
-    final static private String URL = "http://chlqkrtk2.iptime.org:3000/register";
+    final static private String URL = "http://chlqkrtk2.iptime.org:3000/test";
     private Map<String, String> parameters ;
 
     public RegisterRequest(String userID, String userPassword, String userName, String userBirth, String userEmail, Response.Listener<String> listener)

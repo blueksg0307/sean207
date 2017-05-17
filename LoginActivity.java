@@ -49,31 +49,31 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-              final String userID = idText.getText().toString();
-              final String userPassword = passwordText.getText().toString();
-              final String isphone = ("1");
+                final String userID = idText.getText().toString();
+                final String userPassword = passwordText.getText().toString();
+                final String isphone = ("1");
 
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                try {
-                        JSONObject jsonresponse = new JSONObject(response);
-                        boolean success = jsonresponse.getBoolean("success");
+                        try {
+                            JSONObject jsonresponse = new JSONObject(response);
+                            boolean success = jsonresponse.getBoolean("success");
 
 
-                        if (success) {
+                            if (success) {
 
 
-                            String userName = jsonresponse.getString("name");
-                            //String userPhone = jsonresponse.getString("phone"); 아직 데이터가 없음.
-                            Intent Intent = new Intent(LoginActivity.this, MainActivity.class);
-                            Intent.putExtra("userID", userID);
-                            Intent.putExtra("userName", userName);
-                            //Intent.putExtra("userPhone", userPhone);
-                            LoginActivity.this.startActivity(Intent);
+                                String userName = jsonresponse.getString("name");
+                                //String userPhone = jsonresponse.getString("phone"); 아직 데이터가 없음.
+                                Intent Intent = new Intent(LoginActivity.this, MainActivity.class);
+                                Intent.putExtra("userID", userID);
+                                Intent.putExtra("userName", userName);
+                                //Intent.putExtra("userPhone", userPhone);
+                                LoginActivity.this.startActivity(Intent);
 
-                        }
-                        else {
+                            }
+                            else {
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                                 dialog = builder.setMessage("로그인에 실패하셨습니다. 아이디 , 비밀번호를 확인해주세요")

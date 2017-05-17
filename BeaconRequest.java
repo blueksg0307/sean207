@@ -12,14 +12,16 @@ import java.util.Map;
 
 public class BeaconRequest extends StringRequest {
 
-    final static private String URL = "http://chlqkrtk2.iptime.org:3000/test";
+    final static private String URL = "http://chlqkrtk2.iptime.org:3000/beacon_connect";
     private Map<String, String> parameters;
 
-    public BeaconRequest(String beacon_uuid, Response.Listener<String> listener)
+    public BeaconRequest(String beacon_uuid, String userid, Response.Listener<String> listener)
     {
         super(Method.POST, URL, listener, null);
         parameters = new HashMap<>();
-        parameters.put("userid", beacon_uuid);
+        parameters.put("uuid", beacon_uuid);
+        parameters.put("userid", userid);
+
 
 
     }

@@ -59,11 +59,11 @@ public class User {
 
 
 
-    public User(String userID, String userName, String Purpose) {
+    public User(String userID, String userName, String Purpose, String bookDate, String userOrder) {
         this.userID = userID;
         this.userName = userName;
-       // this.bookDate = bookDate;
-       // this.userOrder = userOrder;
+        this.bookDate = bookDate;
+        this.userOrder = userOrder;
         this.Purpose = Purpose;
     }
 

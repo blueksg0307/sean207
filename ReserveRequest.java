@@ -19,7 +19,7 @@ public class ReserveRequest extends StringRequest {
         parameters = new HashMap<>();
         parameters.put("userID", userID);
         parameters.put("userPurpose",userPurpose);
-        parameters.put("bookDate", Date);
+        parameters.put("bookDay", Date);
         parameters.put("bookMonth", Month);
         parameters.put("bookYear", Year );
         parameters.put("bookTime", Time);

@@ -49,7 +49,14 @@ public class MainActivity extends AppCompatActivity {
         public void onResponse(String response) {
             try {
                 JSONObject jsonObject = new JSONObject(response);
-                success = jsonObject.getBoolean("success");
+                boolean success = jsonObject.getBoolean("success");
+                if(success){
+
+
+
+                }
+
+                /*success = jsonObject.getBoolean("success");
                 Toast.makeText(getApplicationContext(),"진료접수가 정상적으로 되었습니다",Toast.LENGTH_SHORT).show();
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setMessage("진료순서를 확인하시겠습니까?")
@@ -57,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                         .setNegativeButton("아니요",null)
                         .show();
 
-
+*/
 
 
             } catch (Exception e) {
@@ -84,13 +91,14 @@ public class MainActivity extends AppCompatActivity {
         /* userBirth = Information.getStringExtra("userPhone");
         userNumeber = Information.getStringExtra("userPhone");*/
 
+
         myinfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent Intent = new Intent(MainActivity.this, MyinfoActivity.class);
                 Intent.putExtra("userID" , userID);
                 Intent.putExtra("userName" , userName);
-               // Intent.putExtra("userPhone" , userPhone);
+                // Intent.putExtra("userPhone" , userPhone);
                 MainActivity.this.startActivity(Intent);
             }
         });
@@ -110,9 +118,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-              Uri uri = Uri.parse("tel:010-7759-5051");
-              Intent intent = new Intent(Intent.ACTION_DIAL,uri);
-              startActivity(intent);
+                Uri uri = Uri.parse("tel:010-7759-5051");
+                Intent intent = new Intent(Intent.ACTION_DIAL,uri);
+                startActivity(intent);
 
 
             }
@@ -128,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
-                       try {
+                        try {
 
                             JSONArray jsonArray = new JSONArray(response);
 
@@ -160,9 +168,8 @@ public class MainActivity extends AppCompatActivity {
         checkorder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                new BackgroundTask1().execute();
 
-                Intent Intent = new Intent(MainActivity.this, WaitListActivity.class);
-                MainActivity.this.startActivity(Intent);
             }
         });
 
@@ -184,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
 
         beaconManager = new BeaconManager(this);
         region = new Region("ranged region",
-                UUID.fromString("b9407f30-f5f8-466e-aff9-25556b57fe70"),null,null);
+                UUID.fromString("43cbda6e-28fa-4f5b-af12-416caf3e3737"),null,null);
 
         beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
             @Override
@@ -197,8 +204,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onBeaconsDiscovered(Region region, List<Beacon> list) {
                 if (!list.isEmpty()) {
-                    Beacon nearestBeacon = list.get(0);
 
+                    Beacon nearestBeacon = list.get(0);
                     beacon_uuid = nearestBeacon.getProximityUUID().toString();
                     beacon_major = nearestBeacon.getMajor();
                     beacon_minor = nearestBeacon.getMinor();
@@ -207,15 +214,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        beacon_uuid = "1555";
+       beacon_uuid = "b9407f30-f5f8-466e-aff9-25556b57fe19";
+
         if(!beacon_uuid.isEmpty()) {
 
-                if(success){
-                                Toast.makeText(this,"이미 진료대기중인 환자입니다", Toast.LENGTH_SHORT).show();
-                }
+            if(success){
+                Toast.makeText(this,"이미 진료대기중인 환자입니다", Toast.LENGTH_SHORT).show();
+            }
 
-                 else{
-                    new BackgroundTask().execute();}
+            else{
+                new BackgroundTask().execute();}
 
         }
     }
@@ -226,10 +234,82 @@ public class MainActivity extends AppCompatActivity {
     class BackgroundTask extends AsyncTask<Void, Void, String>
     {
         String target;
-
         @Override
         protected void onPreExecute(){
             target = "http://chlqkrtk2.iptime.org/";
+        }
+        @Override
+        protected String doInBackground(Void... voids) {
+            try {
+                URL url = new URL(target);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+                StringBuilder stringBuilder = new StringBuilder();
+                while ((temp = bufferedReader.readLine()) != null)
+                {
+                    stringBuilder.append(temp + "\n");
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return stringBuilder.toString().trim();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        public void onProgressUpdate(Void... values){
+            super.onProgressUpdate(values);
+        }
+        @Override
+        public void onPostExecute(String result){
+            Intent intent = new Intent(MainActivity.this, WaitListActivity.class);
+            intent.putExtra("userList", result);
+            MainActivity.this.startActivity(intent);
+        }
+    }
+    */
+
+    private long lastTimeBackPressed;
+    @Override
+    public void onBackPressed() {
+        if(System.currentTimeMillis() - lastTimeBackPressed < 1500)
+        {
+            finish();
+            return;
+        }
+        Toast.makeText(this, "’뒤로’ 버튼을 한번 더 누르면 종료합니다." ,Toast.LENGTH_SHORT).show();
+        lastTimeBackPressed = System.currentTimeMillis();
+    }
+
+    class BackgroundTask extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+
+            // RequestStt
+
+            BeaconRequest beaconRequest = new BeaconRequest(beacon_uuid, userID, responseListener);
+            RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+            queue.add(beaconRequest);
+
+            return null;
+        }
+
+    }
+
+    class BackgroundTask1 extends AsyncTask<Void, Void, String>
+    {
+        String target;
+
+        @Override
+        protected void onPreExecute(){
+            target = "http://chlqkrtk2.iptime.org/get_waiting";
         }
 
         @Override
@@ -268,35 +348,5 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("userList", result);
             MainActivity.this.startActivity(intent);
         }
-    }
-    */
-
-    private long lastTimeBackPressed;
-    @Override
-    public void onBackPressed() {
-        if(System.currentTimeMillis() - lastTimeBackPressed < 1500)
-        {
-            finish();
-            return;
-        }
-        Toast.makeText(this, "’뒤로’ 버튼을 한번 더 누르면 종료합니다." ,Toast.LENGTH_SHORT).show();
-        lastTimeBackPressed = System.currentTimeMillis();
-    }
-
-    class BackgroundTask extends AsyncTask<Void, Void, String> {
-
-        @Override
-        protected String doInBackground(Void... params) {
-
-
-            // RequestStt
-
-            BeaconRequest beaconRequest = new BeaconRequest(beacon_uuid, responseListener);
-            RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
-            queue.add(beaconRequest);
-
-            return null;
-        }
-
     }
 }
