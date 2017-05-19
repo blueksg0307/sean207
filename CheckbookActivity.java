@@ -19,7 +19,6 @@ public class CheckbookActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkbook);
-
         listView = (ListView) findViewById(R.id.listView);
         userList = new ArrayList<User>();
 
@@ -28,9 +27,7 @@ public class CheckbookActivity extends AppCompatActivity {
         userList.add(new User("15:00~15:30", "20170710", "", "방문예정시간"));
         userList.add(new User("16:00~16:30", "20170810", "", "방문예정시간"));
 */
-
-        adapter =  new UserListAdapter(getApplicationContext(), userList);
-        listView.setAdapter(adapter);
+//        listView.setAdapter(adapter);
     }
 
     private long lastTimeBackPressed;

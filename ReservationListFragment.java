@@ -67,21 +67,12 @@ public class ReservationListFragment extends Fragment {
     public void onActivityCreated(Bundle b){
         super.onActivityCreated(b);
 
-        Button button = (Button) getView().findViewById(R.id.searchbutton);
-
-
-
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 userListView = (ListView) getView().findViewById(R.id.UserListView);
                 userList = new ArrayList<>();
                 adapter = new UserListAdapter(getContext().getApplicationContext(), userList);
                 userListView.setAdapter(adapter);
                 new BackgroundTask().execute();
-            }
-        });
+
     }
 
     @Override

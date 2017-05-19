@@ -26,8 +26,10 @@ public class UserListAdapter extends BaseAdapter {
     private List<User> userList;
 
     public UserListAdapter(Context context, List<User> userList){
+
         this.context = context;
         this.userList = userList;
+
     }
 
     @Override
@@ -55,9 +57,9 @@ public class UserListAdapter extends BaseAdapter {
         TextView wantDate =(TextView) v.findViewById(R.id.book_date);
 
 
-        userCount.setText("예약한 시간 :"+ userList.get(i).getUserCount());
-        userName.setText("예약한 시간 :"+ userList.get(i).getUserName());
-        wantDate.setText("예약한 시간 :" + userList.get(i).getBookDate());
+        userCount.setText(""+ userList.get(i).getUserCount());
+        userName.setText(""+ userList.get(i).getUserName());
+        wantDate.setText("" + userList.get(i).getBookDate());
 
         if(userCount == null){
 

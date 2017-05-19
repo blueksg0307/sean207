@@ -1,6 +1,7 @@
 package com.example.administrator.project207;
 
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ListView;
@@ -30,57 +31,45 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         Intent intent = getIntent();
-        //listView = (ListView) findViewById(R.id.HistoryListView);
-       // userList = new ArrayList<User>();
-        TextView textView = (TextView) findViewById(R.id.textView8);
-        textView.setText(intent.getStringExtra("userList"));
+        listView = (ListView) findViewById(R.id.UserListView);
+        userList = new ArrayList<User>();
+        adapter = new UserListAdapter(HistoryActivity.this, userList);
+        listView.setAdapter(adapter);
+
 
         try{
             JSONObject jsonObject = new JSONObject(intent.getStringExtra("userList"));
             JSONArray jsonArray = jsonObject.getJSONArray("response");
+            String userName;
+            String bookDate;
+            String Purpose;
+            int count = 0 ;
+
+            while (count < jsonArray.length())
+            {
+                int usercount = count + 1;
+                bookDate = jsonObject.getString("wanttime");
+                Purpose = jsonObject.getString("status");
+                User user = new User(usercount, bookDate, Purpose);
+                userList.add(user);
+                count++;
+            }
+            if(count ==0){
+                AlertDialog dialog ;
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                dialog = builder.setMessage("진료 기록이 없습니다")
+                                .setPositiveButton("확인", null)
+                                .create();
+                                dialog.show();
+            }
+
+            adapter.notifyDataSetChanged();
 
         }
         catch (Exception e){
 
+            e.printStackTrace();
         }
-
-        /*
-
-        try{
-
-            JSONObject jsonObject = new JSONObject(intent.getStringExtra("userList"));
-            JSONArray jsonArray = jsonObject.getJSONArray("response");
-            String userID ;
-            String userName;
-            String userOrder;
-            String bookDate;
-            String Purpose;
-            int count = 0 ;
-/*
-            while (count < jsonArray.length())
-            {
-                JSONObject object = jsonArray.getJSONObject(count);
-                userID = object.getString("userID");
-                userName = object.getString("userName");
-                userOrder = object.getString("userOrder");
-                bookDate = object.getString("bookDate");
-                Purpose = object.getString("Purpose");
-                User user = new User(userID, userName, userOrder, bookDate, Purpose);
-                userList.add(user);
-                count++;
-
-            }
-            if(count ==0){
-
-            }
-
-            adapter.notifyDataSetChanged();
-        }
-        catch (Exception E){
-
-
-        }
-*/
     }
     private long lastTimeBackPressed;
     @Override

@@ -82,21 +82,12 @@ public class WaitingListFragment extends Fragment {
     public void onActivityCreated(Bundle b){
         super.onActivityCreated(b);
 
-    Button button = (Button) getView().findViewById(R.id.searchbutton);
+                userListView = (ListView) getView().findViewById(R.id.UserListView);
+                userList = new ArrayList<>();
+                adapter = new UserListAdapter(getContext().getApplicationContext(), userList);
+                userListView.setAdapter(adapter);
+                new BackgroundTask().execute();
 
-
-
-
-    button.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            userListView = (ListView) getView().findViewById(R.id.UserListView);
-            userList = new ArrayList<>();
-            adapter = new UserListAdapter(getContext().getApplicationContext(), userList);
-            userListView.setAdapter(adapter);
-            new BackgroundTask().execute();
-        }
-    });
     }
 
 
@@ -113,7 +104,7 @@ public class WaitingListFragment extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
-    
+
 
     @Override
     public void onDetach() {
@@ -207,9 +198,9 @@ public class WaitingListFragment extends Fragment {
                     AlertDialog.Builder builder = new AlertDialog.Builder(WaitingListFragment.this.getActivity());
                     AlertDialog dialog;
                     dialog = builder.setMessage("진료 대기중인 환자가 없습니다")
-                                    .setPositiveButton("확인", null)
-                                    .create();
-                                    dialog.show();
+                            .setPositiveButton("확인", null)
+                            .create();
+                    dialog.show();
                 }
                 adapter.notifyDataSetChanged();
             }
