@@ -6,37 +6,17 @@ package com.example.administrator.project207;
 
 public class User {
 
-    String userID ;
+    int userCount ;
     String userName;
-    String userOrder;
     String bookDate;
-    String Purpose;
 
 
-    public String getBookDate() {
-        return bookDate;
+    public int getUserCount() {
+        return userCount;
     }
 
-    public void setBookDate(String bookDate) {
-        this.bookDate = bookDate;
-    }
-
-    public String getPurpose() {
-        return Purpose;
-    }
-
-    public void setPurpose(String Purpose) {
-        this.bookDate = Purpose;
-    }
-
-
-
-    public String getUserID() {
-        return userID;
-    }
-
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setUserCount(int userCount) {
+        this.userCount = userCount;
     }
 
     public String getUserName() {
@@ -47,28 +27,19 @@ public class User {
         this.userName = userName;
     }
 
-
-    public String getUserOrder() {
-        return userOrder;
+    public String getBookDate() {
+        return bookDate;
     }
 
-    public void setUserOrder(String userOrder) {
-        this.userOrder = userOrder;
+    public void setBookDate(String bookDate) {
+        this.bookDate = bookDate;
     }
 
+    public User(int userCount, String userName, String bookDate ){
 
-
-
-    public User(String userID, String userName, String Purpose, String bookDate, String userOrder) {
-        this.userID = userID;
+        this.userCount = userCount;
         this.userName = userName;
         this.bookDate = bookDate;
-        this.userOrder = userOrder;
-        this.Purpose = Purpose;
+
     }
-
-
-
-
-
 }

@@ -47,19 +47,24 @@ public class UserListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
+
         View v = View.inflate(context, R.layout.user, null);
-        TextView userID =(TextView) v.findViewById(R.id.userid);
-        TextView Purpose =(TextView) v.findViewById(R.id.userOrder);
+
+        TextView userCount =(TextView) v.findViewById(R.id.usercount);
         TextView userName =(TextView) v.findViewById(R.id.userName);
-       // TextView bookDate =(TextView) v.findViewById(R.id.book_date);
+        TextView wantDate =(TextView) v.findViewById(R.id.book_date);
 
-        userID.setText(userList.get(i).getUserID());
-        Purpose.setText(userList.get(i).getUserOrder());
-        userName.setText(userList.get(i).getUserName());
-       // bookDate.setText(userList.get(i).getBookDate());
 
-        v.setTag(userList.get(i).getUserID());
+        userCount.setText("예약한 시간 :"+ userList.get(i).getUserCount());
+        userName.setText("예약한 시간 :"+ userList.get(i).getUserName());
+        wantDate.setText("예약한 시간 :" + userList.get(i).getBookDate());
 
+        if(userCount == null){
+
+            wantDate.setText("진료대기중인 환자가 없습니다.");
+        }
+
+        v.setTag(userList.get(i).getUserCount());
 
         return v;
     }

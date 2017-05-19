@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         final ImageView myinfo   = (ImageView) findViewById(R.id.myinfo);
         final ImageView callbook = (ImageView) findViewById(R.id.callbook);
         final ImageView checkbook  = (ImageView) findViewById(R.id.bookcheck);
-        final ImageView checkorder   = (ImageView) findViewById(R.id.waitinglist);
+        final ImageView waitingList   = (ImageView) findViewById(R.id.waitinglist);
         final ImageView history = (ImageView) findViewById(R.id.histroy);
 
 
@@ -165,11 +165,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        checkorder.setOnClickListener(new View.OnClickListener() {
+        waitingList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new BackgroundTask1().execute();
-
+                Intent intent = new Intent(MainActivity.this, CheckWaiting.class);
+                MainActivity.this.startActivity(intent);
             }
         });
 
@@ -229,51 +229,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-/*
-    class BackgroundTask extends AsyncTask<Void, Void, String>
-    {
-        String target;
-        @Override
-        protected void onPreExecute(){
-            target = "http://chlqkrtk2.iptime.org/";
-        }
-        @Override
-        protected String doInBackground(Void... voids) {
-            try {
-                URL url = new URL(target);
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                InputStream inputStream = httpURLConnection.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                String temp;
-                StringBuilder stringBuilder = new StringBuilder();
-                while ((temp = bufferedReader.readLine()) != null)
-                {
-                    stringBuilder.append(temp + "\n");
-                }
-                bufferedReader.close();
-                inputStream.close();
-                httpURLConnection.disconnect();
-                return stringBuilder.toString().trim();
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-            return null;
-        }
-        @Override
-        public void onProgressUpdate(Void... values){
-            super.onProgressUpdate(values);
-        }
-        @Override
-        public void onPostExecute(String result){
-            Intent intent = new Intent(MainActivity.this, WaitListActivity.class);
-            intent.putExtra("userList", result);
-            MainActivity.this.startActivity(intent);
-        }
-    }
-    */
-
     private long lastTimeBackPressed;
     @Override
     public void onBackPressed() {
@@ -303,13 +258,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    class BackgroundTask1 extends AsyncTask<Void, Void, String>
+
+    class WaitingUserNow extends AsyncTask<Void, Void, String>
     {
         String target;
 
         @Override
         protected void onPreExecute(){
-            target = "http://chlqkrtk2.iptime.org/get_waiting";
+            target = "http://chlqkrtk2.iptime.org:3000/get_waiting";
         }
 
         @Override
@@ -344,9 +300,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onPostExecute(String result){
 
-            Intent intent = new Intent(MainActivity.this, WaitListActivity.class);
+            Intent intent = new Intent(MainActivity.this, WaitingListFragment.class);
             intent.putExtra("userList", result);
-            MainActivity.this.startActivity(intent);
+
+
         }
     }
+
 }
