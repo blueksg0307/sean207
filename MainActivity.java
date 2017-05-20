@@ -37,41 +37,14 @@ public class MainActivity extends AppCompatActivity {
     private BeaconManager beaconManager ;
     private Region region;
     private String beacon_uuid;
-    private int beacon_major;
-    private int beacon_minor;
+    private int beacon_Major;
+    private int beacon_Minor;
     private AlertDialog dialog;
     private boolean success ;
     private String userID;
     private String userName;
-
-    Response.Listener<String> responseListener = new Response.Listener<String>() {
-        @Override
-        public void onResponse(String response) {
-            try {
-                JSONObject jsonObject = new JSONObject(response);
-                boolean success = jsonObject.getBoolean("success");
-                if(success){
-
-
-
-                }
-
-                /*success = jsonObject.getBoolean("success");
-                Toast.makeText(getApplicationContext(),"진료접수가 정상적으로 되었습니다",Toast.LENGTH_SHORT).show();
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setMessage("진료순서를 확인하시겠습니까?")
-                        .setPositiveButton("네", null)
-                        .setNegativeButton("아니요",null)
-                        .show();
-
-*/
-
-
-            } catch (Exception e) {
-
-                e.printStackTrace();}
-        }
-    };
+    private String userBirth;
+    private String userNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,8 +61,10 @@ public class MainActivity extends AppCompatActivity {
         Intent Information = getIntent();
         userID = Information.getStringExtra("userID");
         userName = Information.getStringExtra("userName");
-        /* userBirth = Information.getStringExtra("userPhone");
-        userNumeber = Information.getStringExtra("userPhone");*/
+        userBirth = Information.getStringExtra("userBirth");
+        userNumber = Information.getStringExtra("userNumber");
+
+
 
 
         myinfo.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +73,9 @@ public class MainActivity extends AppCompatActivity {
                 Intent Intent = new Intent(MainActivity.this, MyinfoActivity.class);
                 Intent.putExtra("userID" , userID);
                 Intent.putExtra("userName" , userName);
-                // Intent.putExtra("userPhone" , userPhone);
+                Intent.putExtra("userBirth", userBirth);
+                Intent.putExtra("userNumber", userNumber);
+
                 MainActivity.this.startActivity(Intent);
             }
         });
@@ -109,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent Intent = new Intent(MainActivity.this, ReserveActivity.class);
                 Intent.putExtra("userID" , userID);
                 Intent.putExtra("userName" , userName);
-               /* Intent.putExtra("userPhone" , userPhone);*/
+                Intent.putExtra("userBirth" , userBirth);
                 MainActivity.this.startActivity(Intent);
             }
         });
@@ -188,44 +165,39 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume(){
         super.onResume();
         SystemRequirementsChecker.checkWithDefaultDialogs(this);
-
         beaconManager = new BeaconManager(this);
-        region = new Region("ranged region",
-                UUID.fromString("43cbda6e-28fa-4f5b-af12-416caf3e3737"),null,null);
-
         beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
             @Override
             public void onServiceReady() {
                 beaconManager.startRanging(region);
             }
         });
-
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
             @Override
             public void onBeaconsDiscovered(Region region, List<Beacon> list) {
-                if (!list.isEmpty()) {
+                if(!list.isEmpty()){
 
                     Beacon nearestBeacon = list.get(0);
+                    beacon_Major = nearestBeacon.getMajor();
+                    beacon_Minor = nearestBeacon.getMinor();
                     beacon_uuid = nearestBeacon.getProximityUUID().toString();
-                    beacon_major = nearestBeacon.getMajor();
-                    beacon_minor = nearestBeacon.getMinor();
+                    Intent Information = getIntent();
+                    userID = Information.getStringExtra("userID");
+                    new BackgroundTask().execute();
 
                 }
             }
         });
 
-       beacon_uuid = "b9407f30-f5f8-466e-aff9-25556b57fe19";
+        region = new Region("ranged region",
+                UUID.fromString("43CBDA6E-28FA-4F5B-AF12-416CAF3E3737"),
+                null,null);
+    }
 
-        if(!beacon_uuid.isEmpty()) {
-
-            if(success){
-                Toast.makeText(this,"이미 진료대기중인 환자입니다", Toast.LENGTH_SHORT).show();
-            }
-
-            else{
-                new BackgroundTask().execute();}
-
-        }
+    @Override
+    public void onPause(){
+        beaconManager.stopRanging(region);
+        super.onPause();
     }
 
 
@@ -243,15 +215,56 @@ public class MainActivity extends AppCompatActivity {
 
     class BackgroundTask extends AsyncTask<Void, Void, String> {
 
+        private boolean success ;
+
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+
+                    success = jsonObject.getBoolean("success");
+                    if(success){
+
+                        Toast.makeText(getApplicationContext(),"진료접수가 정상적으로 되었습니다",Toast.LENGTH_SHORT).show();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setMessage("진료접수가 정상적으로 되었습니다. 진료순서를 확인하시겠습니까?")
+                                .setPositiveButton("네", null)
+                                .setNegativeButton("아니요",null)
+                                .create()
+                                .show();
+
+                    }
+                    else{
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setMessage("진료접수가 실패하였습니다. 직접 진료접수를 진행하세요.")
+                                .setPositiveButton("확인", null)
+                                .create()
+                                .show();
+
+                    }
+                } catch (Exception e) {
+
+                    e.printStackTrace();}
+            }
+        };
+
         @Override
         protected String doInBackground(Void... params) {
 
+            try {
 
-            // RequestStt
+                if(!success) {
+                    BeaconRequest beaconRequest = new BeaconRequest(beacon_uuid, userID, responseListener);
+                    RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+                    queue.add(beaconRequest);
+                    Thread.sleep(300000);
+                }
+            }catch (Exception e){
 
-            BeaconRequest beaconRequest = new BeaconRequest(beacon_uuid, userID, responseListener);
-            RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
-            queue.add(beaconRequest);
+                e.printStackTrace();
+
+            }
 
             return null;
         }

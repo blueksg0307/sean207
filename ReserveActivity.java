@@ -49,7 +49,7 @@ public class ReserveActivity extends AppCompatActivity {
         final Intent intent = getIntent();
         userID = intent.getStringExtra("userID");
         userName = intent.getStringExtra("userName");
-        userBirth = intent.getStringExtra("userPhone");
+        userBirth = intent.getStringExtra("userBirth");
         reserved_time = intent.getStringExtra("reserved_time");
         reserved_date = String.valueOf(intent.getIntExtra("reserved_date",-1));
         reserved_month = String.valueOf(intent.getIntExtra("reserved_month",-1));
@@ -75,6 +75,7 @@ public class ReserveActivity extends AppCompatActivity {
                 setdate.putExtra("userID",userID);
                 setdate.putExtra("userName",userName);
                 setdate.putExtra("userPurpose",userPurpose);
+                setdate.putExtra("userBirth", userBirth);
                 ReserveActivity.this.startActivity(setdate);
                 finish();
 
@@ -86,7 +87,7 @@ public class ReserveActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 userID = intent.getStringExtra("userID");
-                /*
+
                 if(userName.equals("")){
                  Toast.makeText(ReserveActivity.this, "진료받으실분의 이름을 입력해주세요", Toast.LENGTH_SHORT).show();}
 
@@ -98,7 +99,7 @@ public class ReserveActivity extends AppCompatActivity {
 
                 if(reserved_year.equals("") | reserved_date.equals("") | reserved_month.equals("")){
                     Toast.makeText(ReserveActivity.this, "진료받으실 날짜을 선택해주세요", Toast.LENGTH_SHORT).show();}
-*/
+
                 userPurpose = diesaeSpinner.getSelectedItem().toString();
 
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -167,7 +168,7 @@ public class ReserveActivity extends AppCompatActivity {
             finish();
             return;
         }
-        Toast.makeText(this, "’뒤로’ 버튼을 한번 더 누르면 종료합니다." ,Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "’뒤로’ 버튼을 한번 더 누르면 종료합니다.." ,Toast.LENGTH_SHORT).show();
         lastTimeBackPressed = System.currentTimeMillis();
     }
 

@@ -65,12 +65,14 @@ public class LoginActivity extends AppCompatActivity {
 
 
                                 String userName = jsonresponse.getString("name");
-                                //String userPhone = jsonresponse.getString("phone"); 아직 데이터가 없음.
+                                String userBirth = jsonresponse.getString("birth");
+                                String userNumber = jsonresponse.getString("phone");
                                 Intent Intent = new Intent(LoginActivity.this, MainActivity.class);
                                 Intent.putExtra("userID", userID);
                                 Intent.putExtra("userName", userName);
-                                //Intent.putExtra("userPhone", userPhone);
+                                Intent.putExtra("userBirth", userBirth);
                                 LoginActivity.this.startActivity(Intent);
+                                finish();
 
                             }
                             else {

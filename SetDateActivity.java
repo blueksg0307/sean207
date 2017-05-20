@@ -78,6 +78,7 @@ public class SetDateActivity extends AppCompatActivity {
                 Intent.putExtra("userID", userID);
                 Intent.putExtra("userName", userName);
                 Intent.putExtra("userPurpose", userPurpose);
+                Intent.putExtra("userBirth", userBirth);
                 SetDateActivity.this.startActivity(Intent);
                 finish();
             }

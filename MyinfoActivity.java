@@ -28,14 +28,18 @@ public class MyinfoActivity extends AppCompatActivity {
 
         Button Editbutton = (Button) findViewById(R.id.editbutton);
         Button Finishbutton = (Button) findViewById(R.id.finishbutton);
+
         final EditText IDtext = (EditText) findViewById(R.id.idtext);
         final EditText Nametext = (EditText) findViewById(R.id.nametext);
-        //TextView Birthtext = (TextView) findViewById(R.id.birthText);
+        final EditText Birthtext = (EditText) findViewById(R.id.Birthtext);
+        final EditText Phonetext = (EditText) findViewById(R.id.Phonetext);
 
         Intent intent = getIntent();
         String userID = intent.getStringExtra("userID");
         String userName = intent.getStringExtra("userName");
-       // String userBirth = intent.getStringExtra("userBirth");
+        String userBirth = intent.getStringExtra("userBirth");
+        String userNumber = intent.getStringExtra("userNumber");
+
 
         IDtext.setText(userID);
         IDtext.setEnabled(false);
@@ -45,14 +49,27 @@ public class MyinfoActivity extends AppCompatActivity {
         Nametext.setEnabled(false);
         Nametext.setBackgroundColor(getResources().getColor(R.color.colorGray));
 
-        // Birthtext.setText(userBirth);
+        Birthtext.setText(userBirth);
+        Birthtext.setEnabled(false);
+        Birthtext.setBackgroundColor(getResources().getColor(R.color.colorGray));
+
+        Phonetext.setText(userNumber);
+        Phonetext.setEnabled(false);
+        Phonetext.setBackgroundColor(getResources().getColor(R.color.colorGray));
+
 
         Editbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                IDtext.setEnabled(true);
+
+                AlertDialog.Builder builder =  new AlertDialog.Builder(MyinfoActivity.this);
+                builder.setMessage("정보를 수정하겠습니까?")
+                        .setPositiveButton("확인",null);
+
                 Nametext.setEnabled(true);
+                Birthtext.setEnabled(true);
+                Phonetext.setEnabled(true);
 
             }
         });
@@ -63,15 +80,16 @@ public class MyinfoActivity extends AppCompatActivity {
 
                 String userID = IDtext.getText().toString();
                 String userName = Nametext.getText().toString();
-                      /*  String userBirth = Birthtext.getText().toString();
-                        String userNumber = Numbertext.getText().toString(); */
+                String userBirth = Birthtext.getText().toString();
+                String userNumber = Phonetext.getText().toString();
 
-                      if(IDtext.equals("") | Nametext.equals("")){
+                      if(IDtext.equals("") | Nametext.equals("") | Birthtext.equals("") | Phonetext.equals("")){
 
                           AlertDialog.Builder builder =  new AlertDialog.Builder(MyinfoActivity.this);
                           builder.setMessage("빈칸없이 정보를 입력해주세요")
-                                  .setPositiveButton("확인",null);
-
+                                  .setPositiveButton("확인",null)
+                                  .create()
+                                  .show();
 
                       }
 
@@ -112,7 +130,7 @@ public class MyinfoActivity extends AppCompatActivity {
                 };
 
 
-                MyinfoEditRequest myinfoEditRequest = new MyinfoEditRequest(userID, userName, responseListener); // userBirth and userNumber are needed.
+                MyinfoEditRequest myinfoEditRequest = new MyinfoEditRequest(userID, userName, userBirth, userNumber, responseListener); // userBirth and userNumber are needed.
                 RequestQueue queue = Volley.newRequestQueue(MyinfoActivity.this);
                 queue.add(myinfoEditRequest);
             }
